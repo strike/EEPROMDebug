@@ -1,6 +1,6 @@
 /*
   EEPROMDebug.h - EEPROM Debug library
-  Copyright (c) 2013 LarkIT.  All right reserved.
+  Copyright (c) 2013 LarkIT (www.larkit.ru).  All right reserved.
   Author: Zubarev Alexander aka Strike <actionstrike@gmail.com>
 
   This library is free software; you can redistribute it and/or
