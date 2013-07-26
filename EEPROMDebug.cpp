@@ -70,6 +70,13 @@ void EEPROMDebug::Write(uint8_t i){
   EEPROM.write(startPos + pos, endMarker);
 }
 
+void EEPROMDebug::Write(uint8_t n, char *date){
+  for (int i = 0; i < 18; i = i + 3){
+    Write(atoi(date+i));
+  }
+  Write(n);
+}
+
 int EEPROMDebug::Read(uint8_t i){
   if (startPos + i > maxPos){
     return -1;
@@ -78,16 +85,54 @@ int EEPROMDebug::Read(uint8_t i){
   return EEPROM.read(startPos + i);
 }
 
+int EEPROMDebug::Read(uint8_t i, char *date){
+  int n;
+  int r = Read(i);
+  char c[3];
+  for (int i = 16; i > 0; i -= 3){
+    itoa( n = ReadPrevAfterLastRead(), c, 10);
+    if (n < 10){
+      date[i-1] = '0';
+      date[i] = c[0];
+    } else {
+      date[i-1] = c[0];
+      date[i] = c[1];
+    }
+    if (i > 9){
+      date[i+1] = ':';
+    } else {
+      date[i+1] = '/';
+    }
+  }
+
+  date[8] = ',';
+  date[17] = 0;
+
+  return r;
+}
+
 int EEPROMDebug::ReadLast(){
-  return Read(pos);
+  return Read(getPrevPos(pos));
+}
+
+int EEPROMDebug::ReadLast(char *date){
+  return Read(getPrevPos(pos), date);
 }
 
 int EEPROMDebug::ReadPrevAfterLastRead(){
   return Read( getPrevPos(lastRead) );
 }
 
+int EEPROMDebug::ReadPrevAfterLastRead(char *date){
+  return Read( getPrevPos(lastRead), date);
+}
+
 int EEPROMDebug::ReadPrev(uint8_t i){
   return Read( getPrevPos(i) );
+}
+
+int EEPROMDebug::ReadPrev(uint8_t n, char *date){
+  return Read( getPrevPos(n), date);
 }
 
 int EEPROMDebug::getPrevPos(uint8_t i){
@@ -107,10 +152,10 @@ uint8_t EEPROMDebug::getNumElements(){
 }
 
 void EEPROMDebug::PrintAll(){
-  Serial.println("EEPROM:");
+  Serial.println(F("EEPROM:"));
   for (int i = 0; i < getNumElements(); i++){
     Serial.print(i);
-    Serial.print(":\t");
+    Serial.print(F(":\t"));
     Serial.println(Read(i));
   }
 }

@@ -36,11 +36,17 @@ class EEPROMDebug
     uint8_t getNumElements();
 
     void Write(uint8_t i);
-
-    int Read(uint8_t i);
     int ReadLast();
-    int ReadPrev(uint8_t i);
     int ReadPrevAfterLastRead();
+    int ReadPrev(uint8_t i);
+    int Read(uint8_t i);
+
+    // DateTime format YY/MM/DD,HH:MM:SS (or other space)
+    void Write(uint8_t n, char* date);
+    int ReadLast(char *date);
+    int ReadPrev(uint8_t n, char *date);
+    int ReadPrevAfterLastRead(char *date);
+    int Read(uint8_t i, char *date);
 
     void PrintAll();
 
